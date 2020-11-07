@@ -48,3 +48,48 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 npm init -y
 npm i miniprogram-sm-crypto --production
 ```
+
+
+
+# flex布局
+
+```
+ justify-content: flex-end;//底部对齐
+```
+
+![image-20201106001141971](G:\miniProgram\WeChatProjects\firstApp\toimc-wxapp\README.assets\image-20201106001141971.png)
+
+默认flex-direction:row
+
+如果设置为column justify和align要互换位置
+
+
+
+justify-content:space-around
+
+![image-20201106004200987](G:\miniProgram\WeChatProjects\firstApp\toimc-wxapp\README.assets\image-20201106004200987.png)
+
+space-evenly
+
+![image-20201106004215126](G:\miniProgram\WeChatProjects\firstApp\toimc-wxapp\README.assets\image-20201106004215126.png)
+
+
+
+# zoom
+
+调整整体页面大小
+
+zoom:0.5
+
+# wx.getSystemInfo
+
+statusBarHeight
+
+根据顶部状态栏的高度 ios状态栏是24，而安卓是30
+
+
+
+# navigationStyle:custom
+
+可以自己设定头部的导航栏
+
