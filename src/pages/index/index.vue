@@ -47,6 +47,9 @@
 
 <script>
 import tabBar from '../../components/tabbar/index'
+import {
+    request
+} from '@/utils/request'
 export default {
     data() {
         return {

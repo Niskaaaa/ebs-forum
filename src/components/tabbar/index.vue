@@ -34,7 +34,7 @@ export default {
                 },
                 {
                     text: "热门",
-                    pagePath: "pages / index / main ",
+                    pagePath: "pages/index/main",
                     iconPath: "../../static/tabs/like.png ",
                     selectedIconPath: "../../static/tabs/like1.png",
                     size: 50
