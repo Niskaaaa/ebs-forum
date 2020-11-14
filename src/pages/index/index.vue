@@ -4,8 +4,8 @@
         <van-search :value="value" shape="round" placeholder="请输入搜索关键词" />
     </div>
     <van-tabs :active="activeTab" class="custom-tab">
-        <van-tab title="首页">内容 1</van-tab>
-        <van-tab title="提问">内容 2</van-tab>
+        <van-tab title="首页" @click="test()">内容 1</van-tab>
+        <van-tab title=" 提问">内容 2</van-tab>
         <van-tab title="建议">内容 3</van-tab>
         <van-tab title="分享">内容 4</van-tab>
         <van-tab title="讨论">内容 5</van-tab>
@@ -151,6 +151,23 @@ export default {
                 title: `切换到标签 ${event.detail.name}`,
                 icon: 'none',
             });
+        },
+        test() {
+            console.log('test')
+            request({
+                url: 'http://localhost:5000/adp/newitem/',
+                method: 'GET',
+                dataType: 'json',
+                success: (res) => {
+                    console.log('test-> res111', res)
+                }
+            }).then((res) => {
+                console.log(res)
+
+            }).catch((err) => {
+                console.log(err)
+
+            })
         },
         showUser(id) {
             console.log('showUser->id', id)
