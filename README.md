@@ -93,3 +93,8 @@ statusBarHeight
 
 可以自己设定头部的导航栏
 
+# 页面跳转
+
+在tab间进行切换 用switchTab
+
+从父页面访问子页面，用navigateTo，保留当前页面，跳转到应用内的某个页面，但不能跳转到tabbar页面

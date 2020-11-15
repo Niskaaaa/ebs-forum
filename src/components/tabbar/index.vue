@@ -2,7 +2,7 @@
 <!--miniprogram/custom-tab-bar/index.wxml-->
 <cover-view class="tab-bar">
     <cover-view class="tab-bar-border"></cover-view>
-    <cover-view v-for="(item,index) in list" :key="index" class="tab-bar-item" :data-path="item.pagePath" :data-index=" index" @click="switchTab(item,index)">
+    <cover-view v-for="(item,index) in list" :key="index" class="tab-bar-item" :data-path="item.pagePath" :data-index="index" @click="switchTab(item,index)">
         <cover-image :src="selected === index ? item.selectedIconPath : item.iconPath"></cover-image>
         <cover-view :style="{'color': selected === index ? selectedColor : color}">{{item.text}}</cover-view>
     </cover-view>
@@ -12,36 +12,36 @@
 <script>
 export default {
     name: 'tab-bar',
+    props: ['selected'],
     data() {
         return {
-            selected: 0,
             color: "#666666",
             selectedColor: "#99CCFF",
-            list2: [1, 2, 3, 4, 5],
             list: [{
                     text: "首页",
-                    pagePath: "pages/index/main",
+                    pagePath: "/pages/index/main",
                     iconPath: "../../static/tabs/home-2.png",
                     selectedIconPath: "../../static/tabs/home-1.png",
                     size: 50
+
                 },
                 {
                     text: "消息",
-                    pagePath: "pages/index/main",
+                    pagePath: "/pages/msg/main",
                     iconPath: "../../static/tabs/bulb(2).png",
                     selectedIconPath: "../../static/tabs/bulb(1).png",
                     size: 50
                 },
                 {
                     text: "热门",
-                    pagePath: "pages/index/main",
+                    pagePath: "/pages/hot/main",
                     iconPath: "../../static/tabs/like.png ",
                     selectedIconPath: "../../static/tabs/like1.png",
                     size: 50
                 },
                 {
                     text: "我的 ",
-                    pagePath: "pages/index/main",
+                    pagePath: "/pages/center/main",
                     iconPath: "../../static/tabs/user(1).png ",
                     selectedIconPath: "../../static/tabs/user.png ",
                     size: 50
@@ -59,7 +59,7 @@ export default {
                 url: item.pagePath
             })
 
-            this.selected = index
+            //this.selected = index
 
         }
     }

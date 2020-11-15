@@ -3,45 +3,40 @@
     <div class="search" :style="{'padding-top':barHeight+'px'}">
         <van-search :value="value" shape="round" placeholder="请输入搜索关键词" />
     </div>
-    <van-tabs :active="activeTab" class="custom-tab">
-        <van-tab title="首页" @click="test()">内容 1</van-tab>
-        <van-tab title=" 提问">内容 2</van-tab>
-        <van-tab title="建议">内容 3</van-tab>
-        <van-tab title="分享">内容 4</van-tab>
-        <van-tab title="讨论">内容 5</van-tab>
-        <ul class="list">
-            <li v-for="(item,index) in lists" :key="index" class="list-box" @click="showDetail(item._id)">
-                <div class="list-head">
-                    <div class="title">
-                        <span class="type" :class="['type-'+item.catalog]" v-if="item.catalog==='share'">分享</span>
-                        <span class="type" :class="['type-'+item.catalog]" v-if="item.catalog==='ask'">提问</span>
-                        <span class="type" :class="['type-'+item.catalog]" v-if="item.catalog==='discuss'">分享</span>
-                        <span class="type" :class="['type-'+item.catalog]" v-if="item.catalog==='advice'">建议</span>
-                        <span class="ellipsis">{{item.title}}</span>
-                    </div>
-                </div>
-                <div class="author">
-                    <div class="inline-block" @click.stop="showUser(item.uid._id)">
-                        <img class="head" :src="item.uid.pic || '/img/bear-200-200.jpg'" alt />
-                        <span class="name">{{item.uid.name || '未知用户'}}</span>
-                        <i class="vip" v-show="item.uid.isVip !== '0'">VIP{{item.uid.isVip}}</i>
-                    </div>
-                </div>
-                <div class="list-body">
-                    <div class="info">{{item.content}}</div>
-                    <img class="fmt" :src="item.snapshot" v-show="item.snapshot" />
-                </div>
-                <div class="list-footer">
-                    <div class="left">
-                        <span class="reply-num">{{item.answer}} 回复</span>
-                        <span class="timer">{{item.created}}</span>
-                    </div>
-                </div>
-            </li>
-        </ul>
 
-    </van-tabs>
-    <tab-bar></tab-bar>
+    <imooc-tabs :actvie="0">
+    </imooc-tabs>
+    <ul class="list">
+        <li v-for="(item,index) in lists" :key="index" class="list-box" @click="showDetail(item._id)">
+            <div class="list-head">
+                <div class="title">
+                    <span class="type" :class="['type-'+item.catalog]" v-if="item.catalog==='share'">分享</span>
+                    <span class="type" :class="['type-'+item.catalog]" v-if="item.catalog==='ask'">提问</span>
+                    <span class="type" :class="['type-'+item.catalog]" v-if="item.catalog==='discuss'">分享</span>
+                    <span class="type" :class="['type-'+item.catalog]" v-if="item.catalog==='advice'">建议</span>
+                    <span class="ellipsis">{{item.title}}</span>
+                </div>
+            </div>
+            <div class="author">
+                <div class="inline-block" @click.stop="showUser(item.uid._id)">
+                    <img class="head" :src="item.uid.pic || '/img/bear-200-200.jpg'" alt />
+                    <span class="name">{{item.uid.name || '未知用户'}}</span>
+                    <i class="vip" v-show="item.uid.isVip !== '0'">VIP{{item.uid.isVip}}</i>
+                </div>
+            </div>
+            <div class="list-body">
+                <div class="info">{{item.content}}</div>
+                <img class="fmt" :src="item.snapshot" v-show="item.snapshot" />
+            </div>
+            <div class="list-footer">
+                <div class="left">
+                    <span class="reply-num">{{item.answer}} 回复</span>
+                    <span class="timer">{{item.created}}</span>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <tab-bar :selected="0"></tab-bar>
 </div>
 </template>
 
@@ -51,6 +46,7 @@ import {
     request,
     axios
 } from '@/utils/request'
+import VantTabs from '@/components/tabbar/vant'
 export default {
     data() {
         return {
@@ -140,19 +136,15 @@ export default {
     },
     props: ['item'],
     components: {
-        tabBar
+        tabBar,
+        'imooc-tabs': VantTabs
     },
     onLoad() {
         this.getBarHeight()
 
     },
     methods: {
-        onChange(event) {
-            wx.showToast({
-                title: `切换到标签 ${event.detail.name}`,
-                icon: 'none',
-            });
-        },
+
         async test() {
             console.log('test')
             const result = await axios.get('/adp/newitem/')
@@ -197,21 +189,6 @@ export default {
     @media (max-width: 320px) {
         width: 50%;
     }
-}
-
-.item {
-    text-align: center;
-    align-self: flex-end;
-    padding-bottom: 5px;
-
-    div {
-        padding-top: 5px
-    }
-}
-
-.custom-tab {
-    --tabs-bottom-bar-color: #99CCFF;
-    --tab-active-text-color: #99CCFF;
 }
 
 li {
