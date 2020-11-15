@@ -24,6 +24,9 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "child_process": "^1.0.2",
+    "fs": "0.0.1-security",
+    "miniprogram-api-promise": "^1.0.4",
     "miniprogram-sm-crypto": "^0.2.1",
     "mpvue": "^2.0.0",
     "node-sass": "^4.14.1",

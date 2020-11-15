@@ -48,7 +48,8 @@
 <script>
 import tabBar from '../../components/tabbar/index'
 import {
-    request
+    request,
+    axios
 } from '@/utils/request'
 export default {
     data() {
@@ -152,22 +153,10 @@ export default {
                 icon: 'none',
             });
         },
-        test() {
+        async test() {
             console.log('test')
-            request({
-                url: 'http://localhost:5000/adp/newitem/',
-                method: 'GET',
-                dataType: 'json',
-                success: (res) => {
-                    console.log('test-> res111', res)
-                }
-            }).then((res) => {
-                console.log(res)
-
-            }).catch((err) => {
-                console.log(err)
-
-            })
+            const result = await axios.get('/adp/newitem/')
+            console.log(result)
         },
         showUser(id) {
             console.log('showUser->id', id)
