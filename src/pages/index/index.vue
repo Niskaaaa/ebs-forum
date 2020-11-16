@@ -1,9 +1,6 @@
 <template>
 <div>
-    <div class="search" :style="{'padding-top':barHeight+'px'}">
-        <van-search :value="value" shape="round" placeholder="请输入搜索关键词" />
-    </div>
-
+<search></search>
     <imooc-tabs :actvie="0">
     </imooc-tabs>
     <ul class="list">
@@ -47,6 +44,7 @@ import {
     axios
 } from '@/utils/request'
 import VantTabs from '@/components/tabbar/vant'
+import search from '../../components/search/index'
 export default {
     data() {
         return {
@@ -54,6 +52,7 @@ export default {
             activeTab: 0,
             value: '',
             barHeight: 0,
+
             lists: [{
                     isEnd: '0',
                     reads: 7,
@@ -137,7 +136,8 @@ export default {
     props: ['item'],
     components: {
         tabBar,
-        'imooc-tabs': VantTabs
+        'imooc-tabs': VantTabs,
+        search,
     },
     onLoad() {
         this.getBarHeight()
@@ -180,16 +180,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search {
-    width: 60%;
-    --search-padding: 0;
-    padding-left: 25px;
-    padding-bottom: 8.5px;
 
-    @media (max-width: 320px) {
-        width: 50%;
-    }
-}
 
 li {
     list-style: none;
