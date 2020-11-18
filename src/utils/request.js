@@ -86,15 +86,16 @@ export const request = async (options = {}) => {
     return result
   }
   export const axios = {
-    get (url,data) {
+    get (url,data,options={}) {
       return request({
         url,
         data: 'json',
         method: 'GET',
+        ...options
 
       })
     },
-    post (url, data) {
+    post (url, data,options={}) {
       return request({
         url,
         data,

@@ -1,55 +1,64 @@
-!<template>
-<van-tabs :active="activeTab" class="custom-tab">
-    <van-tab title="首页" @click="test()">内容 1</van-tab>
-    <van-tab title=" 提问">内容 2</van-tab>
-    <van-tab title="建议">内容 3</van-tab>
-    <van-tab title="分享">内容 4</van-tab>
-    <van-tab title="讨论">内容 5</van-tab>
+<template>
+  <div>
+    <van-tabs :active="activeTab" class="custom-tab" v-on:change="onChange($event)">
+      <van-tab :title="tab.value" v-for="(tab, index) in tabs" :key="index">{{
+        tab.value
+      }}</van-tab>
+    </van-tabs>
 
-</van-tabs>
+  </div>
 </template>
 
 <script>
+import store from "@/pages/index/store";
+
 export default {
-    props: ['active'],
-    methods: {
-        onChange(event) {
-            this.acitve = event.mp.detail
-            wx.swichTab({
-                url: list[this.active]
-            })
-        },
+  data() {
+    return {
 
+      activeTab: 0,
+      tabs: [
+        { key: "", value: "首页" },
+        { key: "learn", value: "学习" },
+        { key: "life", value: "生活" },
+        { key: "share", value: "分享" },
+        { key: "discuss", value: "讨论" },
+      ],
+      list: [
+        "/pages/index/main",
+        "/pages/msg/main",
+        "/pages/hot/main",
+        "/pages/center/main",
+      ],
+    };
+  },
+  methods: {
+    onChange(event) {
+      this.activeTab = event.mp.detail.index;
+      console.log(event);
+      store.commit("setCatalog", this.tabs[this.activeTab].key);
     },
-
-    data() {
-        return {
-            list: [
-                '/pages/index/main',
-                '/pages/msg/main',
-                '/pages/hot/main',
-                '/pages/center/main'
-            ]
-
-        }
+    onClick(event) {
+        console.log(event)
+    
     },
-
-}
+  },
+};
 </script>
 
 <style lang="scss">
 .item {
-    text-align: center;
-    align-self: flex-end;
-    padding-bottom: 5px;
+  text-align: center;
+  align-self: flex-end;
+  padding-bottom: 5px;
 
-    div {
-        padding-top: 5px
-    }
+  div {
+    padding-top: 5px;
+  }
 }
 
 .custom-tab {
-    --tabs-bottom-bar-color: #99CCFF;
-    --tab-active-text-color: #99CCFF;
+  --tabs-bottom-bar-color: #99ccff;
+  --tab-active-text-color: #99ccff;
 }
 </style>
