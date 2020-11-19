@@ -1,5 +1,5 @@
 <template>
-  <ul class="list">
+  <ul class="list" :style="{'padding-top':offsetTop+'px'}">
     <li
       v-for="(item, index) in content"
       :key="index"
@@ -63,7 +63,7 @@
 <script type="text/javascript">
 export default {
  
-  props: ["content"],
+  props: ["content","offsetTop"],
   data() {
     return {};
   },

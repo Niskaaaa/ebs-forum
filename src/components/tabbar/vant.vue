@@ -37,6 +37,7 @@ export default {
       this.activeTab = event.mp.detail.index;
       console.log(event);
       store.commit("setCatalog", this.tabs[this.activeTab].key);
+      console.log(store.state.catalog)
     },
     onClick(event) {
         console.log(event)
