@@ -4,7 +4,7 @@
       v-for="(item, index) in content"
       :key="index"
       class="list-box"
-      @click="showDetail(item._id)"
+      @click="showDetail(index)"
     >
       <div class="list-head">
         <div class="title">
@@ -61,7 +61,9 @@
 </template>
 
 <script type="text/javascript">
+import store from "../../pages/index/store";
 export default {
+  
  
   props: ["content","offsetTop"],
   data() {
@@ -70,9 +72,13 @@ export default {
   components: {},
 
   methods: {
-  
-    
-   
+      showDetail(index) {
+      console.log("showDetail->index", index);
+      console.log(store.state.content[index]._id)
+      wx.navigateTo({
+        url:'/pages/detail/main?id='+store.state.content[index]._id
+      })
+    },
   }, 
   onLoad() {
 

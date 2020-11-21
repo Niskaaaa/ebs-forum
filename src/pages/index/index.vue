@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import {getArticleList} from '../../api/content'
 import tabBar from "../../components/tabbar/index";
 import articleList from "../../components/articleList/index";
 import { request, axios } from "@/utils/request";
@@ -135,9 +136,12 @@ export default {
   methods: {
     async _getList() {
       console.log(store.state.catalog);
-      const result = await axios.get("/public/list" + store.state.catalog);
+      const result = await getArticleList("/public/list" + store.state.catalog);
       console.log(result);
       this.lists = result;
+       store.commit('setContent',result)
+
+
     },
     showUser(id) {
       console.log("showUser->id", id);

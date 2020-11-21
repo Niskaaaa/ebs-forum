@@ -3,7 +3,8 @@
     "pages/index/main",
     "pages/msg/main",
     "pages/hot/main",
-    "pages/center/main"
+    "pages/center/main",
+    "pages/detail/main"
 
   ],
   "window": {

@@ -6,7 +6,7 @@ import { StoreToken } from '@/utils/wxstore'
  * 读取文章列表
  * @param {Object} options 读取文章列表接口参数
  */
-const getList = (options) => {
+const getArticleList = (options) => {
   return axios.get('/public/list', options)
 }
 
@@ -33,6 +33,7 @@ const addPost = (data) => axios.post('/content/add', { ...data })
 
 // 获取文章详情
 const getDetail = async (tid) => {
+  console.log(tid)
   // const token = store.state.token
   const token = await StoreToken.get()
   let headers = {}
@@ -43,14 +44,14 @@ const getDetail = async (tid) => {
       }
     }
   }
-  return axios.get('/public/content/detail', {tid}, headers)
+  return axios.get('/public/content/'+tid, headers)
 }
 
 // 更新文章，编辑帖子
 const updatePost = (data) => axios.post('/content/update', { ...data })
 
 export {
-  getList,
+  getArticleList,
   getTips,
   getTop,
   getLinks,

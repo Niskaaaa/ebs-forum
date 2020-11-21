@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state:{
         catalog:'',
-        contentOffset:''
+        contentOffset:'',
+        content:''
     },
     mutations:{
         setCatalog(state,value){
@@ -16,6 +17,10 @@ export default new Vuex.Store({
         setContentOffset(state,value){
             console.log(value)
             state.contentOffset=value
+        },
+        setContent(state,value){
+            console.log(value)
+            state.content=value
         }
     }
 }) 
