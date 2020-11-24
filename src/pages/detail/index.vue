@@ -20,7 +20,7 @@
         </div>
         <div class="detail-info-foot">{{page.reads}} 阅读</div>
       </div>
-      <imooc-comments :comments="comments" :isEnd="isEnd" @hand="handleHand"></imooc-comments>
+      <commentList :comments="comments"></commentList>
     </div>
     <div class="detail-bottom" :class="{'fixed': isFocus ||faceStatus, 'on': faceStatus}">
       <div class="bottom-input-wrap">
@@ -37,7 +37,7 @@
           <van-icon name="bianji" class-prefix="iconfont" size="14"></van-icon>
           <p>
             <span v-show="showText">评论</span>
-            {{page.answer}}
+            {{page.commentNumber}}
           </p>
         </li>
         <li :class="{'row': !showText}" @click="setFav()">
@@ -69,6 +69,7 @@
 
 <script type="text/javascript">
 import {getDetail} from '../../api/content'
+import comment from './comment'
 export default {
   name: "detail",
   data() {
@@ -83,12 +84,21 @@ export default {
     getDetail(this.$mp.query['id'].substring(1,25)).then((res)=>{
       console.log('res',res)
 
-      this.page=res})
+      this.page=res
+      this.comments=res.comment
+      console.log(this.comments)}
+      )
 
     console.log('page',this.page)
   },
   components: {
+    commentList:comment
 
+  },
+  computed:{
+    showText(){
+      return this.comments
+    }
   }
 }
 </script>
