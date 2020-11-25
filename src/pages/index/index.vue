@@ -26,6 +26,7 @@ export default {
       barHeight: 0,
       isEnd: false,
       isRepeat: false,
+      isLogin:false,
 
       lists: [
         {
