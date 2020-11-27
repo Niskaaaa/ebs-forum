@@ -98,3 +98,7 @@ statusBarHeight
 在tab间进行切换 用switchTab
 
 从父页面访问子页面，用navigateTo，保留当前页面，跳转到应用内的某个页面，但不能跳转到tabbar页面
+
+# 微信登陆
+
+发起网络请求是客户端向服务器请求，带上了一个code，随后服务器带上code，用服务器私密的appid和appsecret，去请求微信的服务

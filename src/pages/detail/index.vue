@@ -36,7 +36,7 @@
         <li :class="{'row': !showText}">
           <van-icon name="bianji" class-prefix="iconfont" size="14"></van-icon>
           <p>
-            <span v-show="showText">评论</span>
+            <span v-show="showText" @click="transfer()">评论</span>
             {{page.commentNumber}}
           </p>
         </li>
@@ -99,7 +99,14 @@ export default {
     showText(){
       return this.comments
     }
-  }
+  },
+  methods: {
+    transfer(){
+ wx.navigateTo({
+        url:'/pages/auth/main'
+      })
+    }
+  },
 }
 </script>
 

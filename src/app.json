@@ -4,7 +4,8 @@
     "pages/msg/main",
     "pages/hot/main",
     "pages/center/main",
-    "pages/detail/main"
+    "pages/detail/main",
+    "pages/auth/main"
 
   ],
   "window": {
