@@ -22,7 +22,9 @@
 
 <script type="text/javascript">
 import wx from '@/utils/wx'
-import {StoreUser} from '@/utils/wxstore'
+import {StoreUser,StoreToken} from '@/utils/wxstore'
+import {wxLogin} from  "../../api/login"
+import store from '../counter/store';
 export default {
   name: "auth",
   data() {
@@ -32,25 +34,35 @@ export default {
   },
   components: {},
   onLoad() {
-    this.getWxCode();
+    this.getWxCode()
+    console.log('codeget')
+   
     
   },
   methods: {
     async getWxCode() {
-      const result = await wx.login();
-
+      const res = await wx.login();
+  
       if (res.code) {
+        
         //发起网络请求
         this.code = res.code;
+        console.log('get',this.code)
       }
     },
 
     async _wxLogin(e){
-      console.log(e.mp.detail)
+      console.log('e',e.mp.detail)
       const user = e.mp.detail
-      await StoreUser.set(e.mp.detail)
-      const result = await wxLogin({code:this.code,user:this.user})
-      console.log('_wxLogin->result',result)
+const re = await StoreUser.set(e.mp.detail)
+      console.log('code',e.mp.detail)
+      const result = await wxLogin({code:this.code,user:e.mp.detail})
+      console.log('result',result.code)
+      if(result.code==200)
+      await StoreToken.set(result.token)
+      console.log('re',result.token)
+      console.log('get',await StoreToken.get())
+      wx.navigateBack()
     }
   },
 };

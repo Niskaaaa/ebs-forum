@@ -1,28 +1,37 @@
 <template>
-  <div class='zoom'>
+  <div class="zoom">
     <div class="wrapper">
-      <div class="detail-head">{{page.title}}</div>
+      <div class="detail-head">{{ page.title }}</div>
       <div class="detail-info">
         <div class="detail-info-head">
-          <div class="avatar">
-            <img :src="page.uid && page.uid.pic ? page.uid.pic : '/static/images/header.jpg'" alt />
-          </div>
+          <div class="avatar"></div>
           <div class="cont">
-            <p class="name">{{page.authorId && page.authorName ? page.authorName : '未设置用户昵称'}}</p>
-            <p class="time">{{page.time}}</p>
+            <p class="name">
+              {{
+                page.authorId && page.authorName
+                  ? page.authorName
+                  : "未设置用户昵称"
+              }}
+            </p>
+            <p class="time">{{ page.time }}</p>
           </div>
           <div class="subscribe">
-            <van-button @click="subscribe()" size="small" class="sub">订阅</van-button>
+            <van-button @click="subscribe()" size="small" class="sub"
+              >订阅</van-button
+            >
           </div>
         </div>
         <div class="detail-info-body">
-          <div >{{page.content}}</div>
+          <div>{{ page.content }}</div>
         </div>
-        <div class="detail-info-foot">{{page.reads}} 阅读</div>
+        <div class="detail-info-foot">{{ page.reads }} 阅读</div>
       </div>
       <commentList :comments="comments"></commentList>
     </div>
-    <div class="detail-bottom" :class="{'fixed': isFocus ||faceStatus, 'on': faceStatus}">
+    <div
+      class="detail-bottom"
+      :class="{ fixed: isFocus || faceStatus, on: faceStatus }"
+    >
       <div class="bottom-input-wrap">
         <van-icon name="advice" class-prefix="iconfont" size="17"></van-icon>
         <div class="input">
@@ -33,17 +42,23 @@
         </div>
       </div>
       <ul class="bottom-right">
-        <li :class="{'row': !showText}">
+        <li :class="{ row: !showText }">
           <van-icon name="bianji" class-prefix="iconfont" size="14"></van-icon>
           <p>
-            <span v-show="showText" @click="transfer()">评论</span>
-            {{page.commentNumber}}
+            <span v-show="showText" @click="checkAuth()">评论</span>
+            {{ page.commentNumber }}
           </p>
         </li>
-        <li :class="{'row': !showText}" @click="setFav()">
-          <van-icon name="shoucang" class-prefix="iconfont" size="16"></van-icon>
+        <li :class="{ row: !showText }" @click="setFav()">
+          <van-icon
+            name="shoucang"
+            class-prefix="iconfont"
+            size="16"
+          ></van-icon>
           <p>
-            <span v-show="showText">{{page.isFav?'取消收藏':'收藏'}}</span>
+            <span v-show="showText">{{
+              page.isFav ? "取消收藏" : "收藏"
+            }}</span>
           </p>
         </li>
         <!-- <li :class="{'row': !showText}">
@@ -56,9 +71,9 @@
       </ul>
     </div>
     <!-- <div class="block"></div> -->
-    <div class="detail-face" :class="{'on': faceStatus}">
+    <div class="detail-face" :class="{ on: faceStatus }">
       <scroll-view scroll-y>
-        <div class="detail-face-item" v-for="(value,key) in faces" :key="key">
+        <div class="detail-face-item" v-for="(value, key) in faces" :key="key">
           <img :src="value" mode="widthFix" />
         </div>
       </scroll-view>
@@ -68,58 +83,98 @@
 </template>
 
 <script type="text/javascript">
-import {getDetail} from '../../api/content'
-import comment from './comment'
+import { getDetail } from "../../api/content";
+import comment from "./comment";
+
+import wx from "@/utils/wx";
+import { StoreToken } from "@/utils/wxstore";
+
+import Dialog from "../../../static/vant/dialog/dialog";
 export default {
   name: "detail",
   data() {
     return {
-      page:{},
-      comments:[]
-    }
+      page: {},
+      comments: [],
+      isLogin: false,
+    };
   },
-  mounted(){
-    console.log(this.$mp.query['id'].substring(1,24))
+  async onShow() {   
+    
+    console.log("show");
+    this.isLogin = await checkAuth();
+    console.log('log',isLogin);
+ 
+  },
+  mounted() {
+    console.log(this.$mp.query["id"].substring(1, 24));
 
-    getDetail(this.$mp.query['id'].substring(1,25)).then((res)=>{
-      console.log('res',res)
+    getDetail(this.$mp.query["id"].substring(1, 25)).then((res) => {
+      console.log("res", res);
 
-      this.page=res
-      this.comments=res.comment
-      console.log(this.comments)}
-      )
+      this.page = res;
+      this.comments = res.comment;
+      console.log(this.comments);
+    });
 
-    console.log('page',this.page)
+    console.log("page", this.page);
   },
   components: {
-    commentList:comment
-
+    commentList: comment,
   },
-  computed:{
-    showText(){
-      return this.comments
-    }
+  computed: {
+    showText() {
+      return this.comments;
+    },
   },
   methods: {
-    transfer(){
- wx.navigateTo({
-        url:'/pages/auth/main'
-      })
-    }
+    transfer() {
+      wx.navigateTo({ url: "/pages/auth/main" });
+    },
+    async checkSession() {
+      try {
+        console.log("try");
+        await wx.checkSession();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    async confirmAuth() {
+      Dialog.confirm({ title: "未登录", message: "确定登录吗？" })
+        .then(() => {
+          // 确定登录
+          wx.navigateTo({ url: "/pages/auth/main" });
+        })
+        .catch(() => {});
+    },
+
+    async checkAuth() {
+      const token = await StoreToken.get();
+      console.log("token", token);
+      if (token) {
+        const flag = await this.checkSession();
+        console.log("flag", flag);
+        if (flag) {
+          return true;
+        }
+      }
+      return this.confirmAuth();
+    },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
 .zoom {
   // padding-top: $header-height;
 
-  zoom:0.5
+  zoom: 0.5;
 }
 .wrapper {
   // padding-top: $header-height;
   background-color: #f6f6f6;
- 
 }
 .detail-head {
   font-size: 36px;

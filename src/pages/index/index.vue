@@ -136,8 +136,8 @@ export default {
   },
   methods: {
     async _getList() {
-      console.log(store.state.catalog);
-      const result = await getArticleList("/public/list" + store.state.catalog);
+      var url = "/public/list" + store.state.catalog
+      const result = await getArticleList(store.state.catalog);
       console.log(result);
       this.lists = result;
        store.commit('setContent',result)

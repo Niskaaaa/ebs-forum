@@ -1,13 +1,13 @@
 import { axios } from '@/utils/request'
 import { StoreToken } from '@/utils/wxstore'
-// import store from '@/store'
+import store from '../pages/index/store'
 
 /**
  * 读取文章列表
  * @param {Object} options 读取文章列表接口参数
  */
 const getArticleList = (options) => {
-  return axios.get('/public/list', options)
+  return axios.get('/public/list'+store.state.catalog)
 }
 
 // 温馨提醒
@@ -50,6 +50,8 @@ const getDetail = async (tid) => {
 // 更新文章，编辑帖子
 const updatePost = (data) => axios.post('/content/update', { ...data })
 
+
+
 export {
   getArticleList,
   getTips,
@@ -58,5 +60,6 @@ export {
   // uploadImg,
   addPost,
   getDetail,
-  updatePost
+  updatePost,
+
 }

@@ -102,3 +102,17 @@ statusBarHeight
 # 微信登陆
 
 发起网络请求是客户端向服务器请求，带上了一个code，随后服务器带上code，用服务器私密的appid和appsecret，去请求微信的服务
+
+
+
+# sessionkey
+
+产生一个第三方的sessionkey 再传给客户端，不会直接把sessionkey给客户端
+
+1 getUserInfo 接口中有加密过后的openId unionid 
+
+2 用sessionkey解密getUserInfo中的信息
+
+3sessionkey有时效性 wxchecksession 检验是否过期
+
+4 校验失败 再进入登录流程
