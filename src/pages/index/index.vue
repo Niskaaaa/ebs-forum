@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="zoom">
 
   <div class="fixed">  <search :barHeight="barHeight"></search>
     <imooc-tabs :actvie="0"> </imooc-tabs></div>
@@ -163,6 +163,7 @@ export default {
             this.barHeight = statusBarHeight + 7;
           }
           store.commit('setContentOffset',this.barHeight+238)
+          console.log('barheight',store.state.contentOffset)
 
         },
         
@@ -180,12 +181,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .fixed{
     position: fixed;
     width: 100%;
     top:0;
     left: 0;
     z-index: 1000;
+
     background: #fff;
 }
 </style>

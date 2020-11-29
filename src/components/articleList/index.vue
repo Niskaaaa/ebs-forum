@@ -1,4 +1,4 @@
-<template>
+<template >
   <ul class="list" :style="{'padding-top':offsetTop+'px'}">
     <li
       v-for="(item, index) in content"
@@ -88,6 +88,7 @@ export default {
 
 <style lang="scss" scoped>
 li {
+
   list-style: none;
 }
 

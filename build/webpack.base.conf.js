@@ -82,6 +82,7 @@ let baseWebpackConfig = {
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: [resolve('src/icon')],
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[ext]')
@@ -102,7 +103,15 @@ let baseWebpackConfig = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[ext]')
         }
-      }
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+        include: [resolve('src/icon')],
+        options: {
+          symbolId: 'icon-[name]'
+        }
+      },
     ]
   },
   plugins: [

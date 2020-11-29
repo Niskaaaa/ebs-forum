@@ -1,17 +1,27 @@
 <template>
-  <div class="zoom">
-    <div>
-      <div class="grey">
+  <div >
+    <div class="zoom" >
+      <div class="grey" >
         <div class="bg"></div>
-        <div class="wrapper">
+        <div class="wrapper" >
           <div class="profile">
             <div class="info">
-              <img class="pic" :src="isLogin ? user.pic: '/static/images/header.jpg'" alt />
+              <img
+                class="pic"
+                :src="isLogin ? user.pic : '/static/images/header.jpg'"
+                alt
+              />
               <div class="user">
-                <p class="name">{{isLogin ?user.name : '请登录'}}</p>
+                <p class="name" @click="checkAuth()">
+                  {{ isLogin ? user.name : "请登录" }}
+                </p>
                 <p class="fav">
-                  <van-icon name="fav2" class-prefix="iconfont" size="14"></van-icon>
-                  积分：{{user && user.favs ? user.favs:0}}
+                  <van-icon
+                    name="fav2"
+                    class-prefix="iconfont"
+                    size="14"
+                  ></van-icon>
+                  积分：{{ user && user.favs ? user.favs : 0 }}
                 </p>
               </div>
               <navigator class="link">个人主页 ></navigator>
@@ -38,44 +48,171 @@
             </ul>
           </div>
         </div>
-        <div class="center-wraper">
+        <div class="center-wraper" >
           <ul class="center-list first">
-            <li v-for="(item,index) in lists" :key="index" @click="goTo(item.routeName)">
+            <li
+              v-for="(item, index) in lists"
+              :key="index"
+              @click="goTo(item.routeName)"
+            >
               <i :class="item.icon"></i>
-              <span>{{item.name}}</span>
+              <span>{{ item.name }}</span>
             </li>
           </ul>
           <ul class="center-list">
-            <li v-for="(item,index) in routes" :key="index" @click="navTo(item)">
+            <li
+              v-for="(item, index) in routes"
+              :key="index"
+              @click="navTo(item)"
+            >
               <i :class="item.icon"></i>
-              <span>{{item.name}}</span>
+              <span>{{ item.name }}</span>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <imooc-tabs :active="3"></imooc-tabs>
+    <tab-bar :selected="3"></tab-bar>
   </div>
 </template>
 
 <script>
-import tabBar from '../../components/tabbar/index'
+import search from "../../components/search/index";
+import tabBar from "../../components/tabbar/index";
+import { StoreUser,StoreToken } from "@/utils/wxstore";
+import store from "../index/store";
+import wx from "@/utils/wx";
 export default {
-    name: "app",
-    data() {
-        return {
+  name: "app",
+  data() {
+    return {
+      isLogin: false,
+      user: "",
+      lists: [
+        {
+          name: "我的帖子",
+          icon: "icon-teizi",
+          routeName: "mypost",
+        },
+        {
+          name: "修改设置",
+          icon: "icon-setting",
+          routeName: "settings",
+        },
+        {
+          name: "修改密码",
+          icon: "icon-lock2",
+          routeName: "passwd",
+        },
+        {
+          name: "签到中心",
+          icon: "icon-qiandao",
+          routeName: "sign",
+        },
+        {
+          name: "购买记录",
+          icon: "icon-qiandao",
+          routeName: "404",
+        },
+        {
+          name: "赞助商",
+          icon: "icon-jiangbei",
+          routeName: "404",
+        },
+      ],
+      routes: [
+        {
+          name: "学习",
+          icon: "icon-question",
+          tab: "learn",
+        },
+        {
+          name: "分享",
+          icon: "icon-share",
+          tab: "share",
+          path:"/pages/index/main"
+        },
+        {
+          name: "生活",
+          icon: "icon-taolun",
+          tab: "life",
+        },
+        {
+          name: "讨论",
+          icon: "icon-advise",
+          tab: "discuss",
+        },
+      ],
+    };
+  },
 
-        }
-    },
-    components: {
-        tabBar,
+  computed:{
+    bar:function(){
+      return store.state.contentOffset}
+
+  },
+  async onShow() {
+    console.log("islogin?",this.bar);
+    const user = await StoreUser.get();
+    if (user) {
+      this.user = user;
     }
-}
+    this.isLogin = await this.checkAuth();
+
+    console.log("islogin?", this.isLogin);
+    
+  },
+  methods: {
+    navTo(item){
+      
+      getApp().globalData.tab=item.tab
+      console.log(getApp().globalData.tab)
+      store.commit("setCatalog",getApp().globalData.tab);
+      wx.switchTab({
+        url:'/pages/index/main'
+      })
+    },
+    async confirmAuth() {
+      Dialog.confirm({ title: "未登录", message: "确定登录吗？" })
+        .then(() => {
+          // 确定登录
+          wx.navigateTo({ url: "/pages/auth/main" });
+        })
+        .catch(() => {});
+    },
+
+    async checkAuth() {
+      const token = await StoreToken.get();
+      console.log("token", token);
+      if (token) {
+        const flag = await this.checkSession();
+        console.log("flag", flag);
+        if (flag) {
+          return true;
+        }
+      }
+      return this.confirmAuth();
+    },
+
+    async checkSession() {
+      try {
+        console.log("try");
+        await wx.checkSession();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+  },
+  components: {
+    tabBar,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.zoom{
-    zoom:0.5
+.zoom {
+  zoom: 0.5;
 }
 .grey {
   position: fixed;
@@ -98,7 +235,6 @@ a {
 //   z-index: 50;
 // }
 .bg {
-  background-image: url('http://localhost:3000/img/my_bg@2x.png');
   background-repeat: no-repeat;
   background-size: contain;
   position: relative;
@@ -118,7 +254,6 @@ a {
   top: 0;
   z-index: 100;
   box-sizing: border-box;
- ;
   .profile {
     background: #fff;
     border-radius: 12px;
@@ -182,7 +317,7 @@ a {
         width: 2px;
         height: 80px;
         background: #ddd;
-        content: '';
+        content: "";
         position: absolute;
         right: -60px;
         top: 20px;
@@ -230,6 +365,9 @@ a {
       color: #888;
       background-size: contain;
     }
+  }
+}
+
     .icon-teizi {
       background-image: url('http://localhost:3000/img/teizi@2x.png');
     }
@@ -260,6 +398,4 @@ a {
     .icon-advise {
       background-image: url('http://localhost:3000/img/advice@2x.png');
     }
-  }
-}
 </style>

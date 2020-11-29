@@ -32,6 +32,21 @@ export default {
       ],
     };
   },
+  computed:{
+    catalog(){
+      return store.state.catalog
+    }
+  },
+
+  watch:{
+    catalog(newval,oldval){
+      if(newval!==oldval)
+      this.tabs.map((item,index)=>{
+        if(item.key===newval)
+        this.activeTab=index 
+      })
+    }
+  },
   methods: {
     onChange(event) {
       this.activeTab = event.mp.detail.index;

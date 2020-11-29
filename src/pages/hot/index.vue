@@ -1,6 +1,6 @@
 <template>
 <div>hot
-
+   <svg-icon icon-class="advise" />
     <tab-bar :selected="2"></tab-bar>
 </div>
 </template>
