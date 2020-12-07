@@ -5,7 +5,8 @@
     "pages/hot/main",
     "pages/center/main",
     "pages/detail/main",
-    "pages/auth/main"
+    "pages/auth/main",
+    "pages/newPost/main"
 
   ],
   "window": {

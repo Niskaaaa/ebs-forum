@@ -1,16 +1,18 @@
 <template>
   <div class="zoom">
+    <div class="fixed">
+      <search :barHeight="barHeight"></search>
+      <imooc-tabs :actvie="0"> </imooc-tabs>
+    </div>
 
-  <div class="fixed">  <search :barHeight="barHeight"></search>
-    <imooc-tabs :actvie="0"> </imooc-tabs></div>
-  
     <articleList :content="lists" :offsetTop="offsetTop"></articleList>
+    
     <tab-bar :selected="0"></tab-bar>
   </div>
 </template>
 
 <script>
-import {getArticleList} from '../../api/content'
+import { getArticleList } from "../../api/content";
 import tabBar from "../../components/tabbar/index";
 import articleList from "../../components/articleList/index";
 import { request, axios } from "@/utils/request";
@@ -26,7 +28,7 @@ export default {
       barHeight: 0,
       isEnd: false,
       isRepeat: false,
-      isLogin:false,
+      isLogin: false,
 
       lists: [
         {
@@ -109,9 +111,9 @@ export default {
       console.log("111" + store.state.catalog);
       return store.state.catalog;
     },
-    offsetTop(){
-        return store.state.contentOffset
-    }
+    offsetTop() {
+      return store.state.contentOffset;
+    },
   },
 
   watch: {
@@ -130,19 +132,18 @@ export default {
     search,
     articleList,
   },
-  onLoad() {
+  async onLoad() {
     this.getBarHeight();
     this._getList();
+    this.isLogin = await this.checkAuth()
   },
   methods: {
     async _getList() {
-      var url = "/public/list" + store.state.catalog
+      var url = "/public/list" + store.state.catalog;
       const result = await getArticleList(store.state.catalog);
       console.log(result);
       this.lists = result;
-       store.commit('setContent',result)
-
-
+      store.commit("setContent", result);
     },
     showUser(id) {
       console.log("showUser->id", id);
@@ -162,13 +163,43 @@ export default {
           } else {
             this.barHeight = statusBarHeight + 7;
           }
-          store.commit('setContentOffset',this.barHeight+238)
-          console.log('barheight',store.state.contentOffset)
-
+          store.commit("setContentOffset", this.barHeight + 238);
+          console.log("barheight", store.state.contentOffset);
         },
-        
       });
     },
+    addPost() {
+      if(!this.isLogin){
+        confirmAuth()
+        return
+      }
+      //校验用户是否登录
+      wx.navigateTo({
+        url: "/pages/newPost/main",
+      });
+    },
+  },
+
+  async confirmAuth() {
+    Dialog.confirm({ title: "未登录", message: "确定登录吗？" })
+      .then(() => {
+        // 确定登录
+        wx.navigateTo({ url: "/pages/auth/main" });
+      })
+      .catch(() => {});
+  },
+
+  async checkAuth() {
+    const token = await StoreToken.get();
+    console.log("token", token);
+    if (token) {
+      const flag = await this.checkSession();
+      console.log("flag", flag);
+      if (flag) {
+        return true;
+      }
+    }
+    return this.confirmAuth();
   },
   onPullDownRefresh() {
     this.page = 0;
@@ -181,14 +212,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fixed {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 
-.fixed{
-    position: fixed;
-    width: 100%;
-    top:0;
-    left: 0;
-    z-index: 1000;
+  background: #fff;
+}
 
-    background: #fff;
+.addBtn {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 110px;
+  right: 10px;
 }
 </style>
