@@ -6,7 +6,13 @@
     </div>
 
     <articleList :content="lists" :offsetTop="offsetTop"></articleList>
-    
+    <img
+      src="../../../static/images/post.png"
+      @click="addPost()"
+      alt
+      class="addBtn"
+      mode="widthFit"
+    />
     <tab-bar :selected="0"></tab-bar>
   </div>
 </template>
@@ -19,6 +25,8 @@ import { request, axios } from "@/utils/request";
 import VantTabs from "@/components/tabbar/vant";
 import search from "../../components/search/index";
 import store from "./store";
+import { StoreUser,StoreToken } from "@/utils/wxstore";
+import wx from "@/utils/wx";
 export default {
   data() {
     return {
@@ -132,12 +140,45 @@ export default {
     search,
     articleList,
   },
-  async onLoad() {
+  onLoad() {
     this.getBarHeight();
     this._getList();
-    this.isLogin = await this.checkAuth()
+  },
+  async onShow() {
+    this.isLogin = await this.checkAuth();
   },
   methods: {
+    async confirmAuth() {
+      Dialog.confirm({ title: "未登录", message: "确定登录吗？" })
+        .then(() => {
+          // 确定登录
+          wx.navigateTo({ url: "/pages/auth/main" });
+        })
+        .catch(() => {});
+    },
+
+    async checkAuth() {
+      const token = await StoreToken.get();
+      console.log("token", token);
+      if (token) {
+        const flag = await this.checkSession();
+        console.log("flag", flag);
+        if (flag) {
+          return true;
+        }
+      }
+      return this.confirmAuth();
+    },
+
+    async checkSession() {
+      try {
+        console.log("try");
+        await wx.checkSession();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
     async _getList() {
       var url = "/public/list" + store.state.catalog;
       const result = await getArticleList(store.state.catalog);
@@ -168,39 +209,20 @@ export default {
         },
       });
     },
-    addPost() {
-      if(!this.isLogin){
-        confirmAuth()
-        return
+    async addPost() {
+      if (!this.isLogin) {
+        console.log(this.isLogin);
+        console.log("check");
+        await this.confirmAuth();
+        return;
       }
       //校验用户是否登录
-      wx.navigateTo({
+      else wx.navigateTo({
         url: "/pages/newPost/main",
       });
     },
   },
 
-  async confirmAuth() {
-    Dialog.confirm({ title: "未登录", message: "确定登录吗？" })
-      .then(() => {
-        // 确定登录
-        wx.navigateTo({ url: "/pages/auth/main" });
-      })
-      .catch(() => {});
-  },
-
-  async checkAuth() {
-    const token = await StoreToken.get();
-    console.log("token", token);
-    if (token) {
-      const flag = await this.checkSession();
-      console.log("flag", flag);
-      if (flag) {
-        return true;
-      }
-    }
-    return this.confirmAuth();
-  },
   onPullDownRefresh() {
     this.page = 0;
     (this.lists = []), this._getList();
