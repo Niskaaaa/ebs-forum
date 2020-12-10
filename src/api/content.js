@@ -29,7 +29,7 @@ const getLinks = () => {
 // const uploadImg = (formData) => axios.post('/content/upload', formData)
 
 // 发贴接口
-const addPost = (data) => axios.post('/content/add', { ...data })
+const addPost = (data) => axios.post('/postArticle', data)
 
 // 获取文章详情
 const getDetail = async (tid) => {

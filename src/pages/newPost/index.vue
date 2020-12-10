@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <van-field placeholder="请输入帖子标题" clearable :value="title"></van-field>
-    <van-field placeholder="请输入帖子内容" :value="content" type="textarea" class="edit-content"></van-field>
+    <van-field placeholder="请输入帖子内容" @change="changeShoppingDetail" clearable :value="content"></van-field>
+
     <div class="upload-img">
       <van-uploader @afterRead="afterRead" :fileList="fileList" @delete="deteleImg"></van-uploader>
     </div>
@@ -32,7 +33,9 @@
 </template>
 
 <script>
-
+import {addPost} from  "../../api/content"
+import { StoreUser,StoreToken } from "@/utils/wxstore";
+import wx from '@/utils/wx'
 export default {
   name: 'newPost',
   data () {
@@ -42,7 +45,7 @@ export default {
       fileList: [],
       imgList: [],
       block: ['请选择', '学习', '生活', '分享', '讨论'],
-      blockValue: ['', 'ask', 'share', 'discuss', 'advise'],
+      blockValue: ['', 'learn', 'life', 'share','discuss'],
       blockIndex: 0,
       favs: [20, 30, 50, 60, 80],
       favsIndex: ''
@@ -71,6 +74,12 @@ export default {
         }
       })
     },
+    changeShoppingName (event) {
+        this.title = event.mp.detail
+      },
+      changeShoppingDetail (event) {
+        this.content = event.mp.detail
+      },
     deteleImg (e) {
       this.fileList.splice(e.mp.detail.index, 1)
       this.imgList.splice(e.mp.detail.index, 1)
@@ -80,6 +89,14 @@ export default {
     },
     changeFavs (e) {
       this.favsIndex = e.target.value
+    },
+    async submit(){
+      
+      var user = await StoreUser.get()
+      console.log(user)
+      await addPost({title:this.title,content:this.content,user:user,catalog:this.blockValue[this.blockIndex]})
+      wx.navigateBack()
+
     }
   }
 }

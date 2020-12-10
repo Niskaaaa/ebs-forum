@@ -54,7 +54,7 @@ export default {
     async _wxLogin(e){
       console.log('e',e.mp.detail)
       const user = e.mp.detail
-const re = await StoreUser.set(e.mp.detail)
+      const re = await StoreUser.set(e.mp.detail)
       console.log('code',e.mp.detail)
       const result = await wxLogin({code:this.code,user:e.mp.detail})
       console.log('result',result.code)

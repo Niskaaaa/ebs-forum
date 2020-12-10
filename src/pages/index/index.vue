@@ -217,9 +217,9 @@ export default {
         return;
       }
       //校验用户是否登录
-      else wx.navigateTo({
-        url: "/pages/newPost/main",
-      });
+      else  wx.navigateTo({
+        url:'/pages/newPost/main'
+      })
     },
   },
 
